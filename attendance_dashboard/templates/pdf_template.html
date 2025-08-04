@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Student Attendance Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>StudentID</th>
+                <th>Name</th>
+                <th>Total Classes</th>
+                <th>Classes Attended</th>
+                <th>Attendance %</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.StudentID }}</td>
+                <td>{{ student.Name }}</td>
+                <td>{{ student.TotalClasses }}</td>
+                <td>{{ student.ClassesAttended }}</td>
+                <td>{{ student["Attendance%"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

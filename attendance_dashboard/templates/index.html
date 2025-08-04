@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Attendance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f7f7f7; }
+        h1 { text-align: center; }
+        table, th, td { border: 1px solid #ddd; border-collapse: collapse; padding: 8px; }
+        th { background-color: #4CAF50; color: white; }
+        .chart-container { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 40px; }
+        canvas { background: white; padding: 10px; border-radius: 12px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <h1>Student Attendance Dashboard</h1>
+
+    <!-- 🔍 Search Form -->
+    <form method="POST">
+        <input type="text" name="name" placeholder="Search by name">
+        <button type="submit">Search</button>
+        <a href="{{ url_for('index') }}">Reset</a>
+    </form>
+<div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+  <input type="text" name="name" placeholder="Search by Name" class="form-control" style="width: 180px;" />
+  <input type="number" name="min_percent" placeholder="Min %" class="form-control" style="width: 120px;" />
+  <input type="number" name="max_percent" placeholder="Max %" class="form-control" style="width: 120px;" />
+  <select name="category" class="form-control" style="width: 160px;">
+    <option value="">All Categories</option>
+    <option value="Excellent">Excellent</option>
+    <option value="Good">Good</option>
+    <option value="Average">Average</option>
+    <option value="Low Performer">Low Performer</option>
+  </select>
+  <select name="sort_by" class="form-control" style="width: 160px;">
+    <option value="">Sort By</option>
+    <option value="name_asc">Name (A-Z)</option>
+    <option value="name_desc">Name (Z-A)</option>
+    <option value="percent_asc">Attendance % (Low-High)</option>
+    <option value="percent_desc">Attendance % (High-Low)</option>
+    <option value="category_asc">Category (A-Z)</option>
+    <option value="category_desc">Category (Z-A)</option>
+  </select>
+  <button type="submit" class="btn btn-primary">Apply</button>
+</div>
+
+    <!-- 📋 Attendance Table -->
+<table width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Total Classes</th>
+            <th>Classes Attended</th>
+            <th>Attendance %</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in students %}
+        <tr>
+            <td>{{ s.StudentID }}</td>
+            <td>{{ s.Name }}</td>
+            <td>{{ s.TotalClasses }}</td>
+            <td>{{ s.ClassesAttended }}</td>
+            <td>{{ s['Attendance%'] }}%</td>
+            <td>{{ s.Category }}</td>
+            <td>
+                <a href="{{ url_for('edit_attendance', student_id=s.StudentID) }}">Edit</a> |
+                <a href="{{ url_for('delete_attendance', student_id=s.StudentID) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 🔢 Pagination Controls -->
+<div style="text-align: center; margin-top: 20px;">
+  {% if total_pages > 1 %}
+    <div class="pagination">
+      {% if page > 1 %}
+        <a href="?page={{ page - 1 }}" class="btn btn-secondary">Previous</a>
+      {% endif %}
+      Page {{ page }} of {{ total_pages }}
+      {% if page < total_pages %}
+        <a href="?page={{ page + 1 }}" class="btn btn-secondary">Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+    <!-- 📦 Export Button -->
+    <br>
+    <a href="{{ url_for('export_excel') }}">Export to Excel</a>
+     <a href="{{ url_for('add_student') }}" class="btn btn-primary my-2">➕ Add New Student</a>
+    <a href="{{ url_for('export_pdf') }}" class="btn btn-danger">📄 Export as PDF</a>
+
+    <!-- 📊 Charts -->
+    <div class="chart-container">
+        <div>
+            <h3>Attendance % by Student</h3>
+            <canvas id="barChart" width="400" height="300"></canvas>
+        </div>
+        <div>
+            <h3>Student Performance Distribution</h3>
+            <canvas id="pieChart" width="300" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- 📈 Chart Script -->
+    <script>
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ bar_data.names | tojson }},
+                datasets: [{
+                    label: 'Attendance %',
+                    data: {{ bar_data.percentages | tojson }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+
+        const pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ pie_data.labels | tojson }},
+                datasets: [{
+                    data: {{ pie_data.data | tojson }},
+                    backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#F44336']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

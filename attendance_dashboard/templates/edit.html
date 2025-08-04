@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Attendance</title>
+</head>
+<body>
+    <h2>Edit Student Attendance</h2>
+    <form method="POST">
+        <label>Name:</label>
+        <input type="text" name="name" value="{{ student[1] }}" required><br><br>
+
+        <label>Total Classes:</label>
+        <input type="number" name="total_classes" value="{{ student[2] }}" required><br><br>
+
+        <label>Classes Attended:</label>
+        <input type="number" name="classes_attended" value="{{ student[3] }}" required><br><br>
+
+        <button type="submit">Update</button>
+        <a href="{{ url_for('index') }}">Cancel</a>
+    </form>
+</body>
+</html>
