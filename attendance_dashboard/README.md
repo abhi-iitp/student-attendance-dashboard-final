@@ -20,7 +20,8 @@ This project allows admins to add, edit, delete, and monitor attendance performa
 
 ## 📸 Dashboard Preview
 
-> *(Add screenshots if needed)*
+> *<img width="1920" height="1080" alt="Screenshot 2025-08-04 231838" src="https://github.com/user-attachments/assets/f4d852b6-24ce-4727-a478-db3c91a49455" />
+*
 
 ---
 
@@ -42,5 +43,4 @@ This project allows admins to add, edit, delete, and monitor attendance performa
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/abhi-iitp/student-attendance-dashboard-final.git
-cd student-attendance-dashboard-final
-
+cd student-attendance-dashboard-final/attendance_dashboard
