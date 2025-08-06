@@ -41,5 +41,6 @@ This project allows admins to add, edit, delete, and monitor attendance performa
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/student-attendance-dashboard.git
-cd student-attendance-dashboard
+git clone https://github.com/abhi-iitp/student-attendance-dashboard-final.git
+cd student-attendance-dashboard-final
+
